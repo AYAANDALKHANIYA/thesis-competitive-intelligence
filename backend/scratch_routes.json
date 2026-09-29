@@ -1,0 +1,386 @@
+[
+  {
+    "path": "/health",
+    "methods": [
+      "GET"
+    ],
+    "name": "health",
+    "module": "app.api.routes.health"
+  },
+  {
+    "path": "/health/db",
+    "methods": [
+      "GET"
+    ],
+    "name": "health_db",
+    "module": "app.api.routes.health"
+  },
+  {
+    "path": "/health/sources",
+    "methods": [
+      "GET"
+    ],
+    "name": "health_sources",
+    "module": "app.api.routes.health"
+  },
+  {
+    "path": "/api/v1/companies",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_companies",
+    "module": "app.api.routes.companies"
+  },
+  {
+    "path": "/api/v1/companies",
+    "methods": [
+      "POST"
+    ],
+    "name": "create_company",
+    "module": "app.api.routes.companies"
+  },
+  {
+    "path": "/api/v1/companies/{company_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_company",
+    "module": "app.api.routes.companies"
+  },
+  {
+    "path": "/api/v1/companies/{company_id}",
+    "methods": [
+      "PATCH"
+    ],
+    "name": "update_company",
+    "module": "app.api.routes.companies"
+  },
+  {
+    "path": "/api/v1/companies/{company_id}",
+    "methods": [
+      "DELETE"
+    ],
+    "name": "delete_company",
+    "module": "app.api.routes.companies"
+  },
+  {
+    "path": "/api/v1/companies/{company_id}/collect",
+    "methods": [
+      "POST"
+    ],
+    "name": "run_initial_collection",
+    "module": "app.api.routes.companies"
+  },
+  {
+    "path": "/api/v1/sources",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_sources",
+    "module": "app.api.routes.sources"
+  },
+  {
+    "path": "/api/v1/sources",
+    "methods": [
+      "POST"
+    ],
+    "name": "create_source",
+    "module": "app.api.routes.sources"
+  },
+  {
+    "path": "/api/v1/sources/{source_id}",
+    "methods": [
+      "PATCH"
+    ],
+    "name": "update_source",
+    "module": "app.api.routes.sources"
+  },
+  {
+    "path": "/api/v1/companies/{company_id}/competitors",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_competitors",
+    "module": "app.api.routes.competitors"
+  },
+  {
+    "path": "/api/v1/companies/{company_id}/competitors",
+    "methods": [
+      "POST"
+    ],
+    "name": "add_competitor",
+    "module": "app.api.routes.competitors"
+  },
+  {
+    "path": "/api/v1/companies/{company_id}/competitors/{competitor_id}",
+    "methods": [
+      "DELETE"
+    ],
+    "name": "remove_competitor",
+    "module": "app.api.routes.competitors"
+  },
+  {
+    "path": "/api/v1/documents",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_documents",
+    "module": "app.api.routes.documents"
+  },
+  {
+    "path": "/api/v1/documents/{document_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_document",
+    "module": "app.api.routes.documents"
+  },
+  {
+    "path": "/api/v1/analytics/sentiment",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_sentiment",
+    "module": "app.api.routes.analytics"
+  },
+  {
+    "path": "/api/v1/analytics/topics",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_topics",
+    "module": "app.api.routes.analytics"
+  },
+  {
+    "path": "/api/v1/analytics/entities",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_entities",
+    "module": "app.api.routes.analytics"
+  },
+  {
+    "path": "/api/v1/analytics/trends",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_trends",
+    "module": "app.api.routes.analytics"
+  },
+  {
+    "path": "/api/v1/analytics/signals",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_signals",
+    "module": "app.api.routes.analytics"
+  },
+  {
+    "path": "/api/v1/analytics/market-index",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_market_index",
+    "module": "app.api.routes.analytics"
+  },
+  {
+    "path": "/api/v1/analytics/dashboard",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_dashboard",
+    "module": "app.api.routes.analytics"
+  },
+  {
+    "path": "/api/v1/predictions",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_predictions",
+    "module": "app.api.routes.predictions"
+  },
+  {
+    "path": "/api/v1/predictions/models",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_models",
+    "module": "app.api.routes.predictions"
+  },
+  {
+    "path": "/api/v1/predictions/models/{model_version_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_model_version",
+    "module": "app.api.routes.predictions"
+  },
+  {
+    "path": "/api/v1/predictions/{company_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_company_predictions",
+    "module": "app.api.routes.predictions"
+  },
+  {
+    "path": "/api/v1/insights",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_insights",
+    "module": "app.api.routes.insights"
+  },
+  {
+    "path": "/api/v1/insights/{insight_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_insight",
+    "module": "app.api.routes.insights"
+  },
+  {
+    "path": "/api/v1/insights/generate",
+    "methods": [
+      "POST"
+    ],
+    "name": "generate_insight",
+    "module": "app.api.routes.insights"
+  },
+  {
+    "path": "/api/v1/ingestion/api/v1/ingestion/run",
+    "methods": [
+      "POST"
+    ],
+    "name": "trigger_ingestion",
+    "module": "app.api.routes.ingestion"
+  },
+  {
+    "path": "/api/v1/ingestion/api/v1/ingestion/runs",
+    "methods": [
+      "GET"
+    ],
+    "name": "list_ingestion_runs",
+    "module": "app.api.routes.ingestion"
+  },
+  {
+    "path": "/api/v1/ingestion/api/v1/ingestion/runs/{run_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_ingestion_run",
+    "module": "app.api.routes.ingestion"
+  },
+  {
+    "path": "/api/v1/system/configuration",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_configuration",
+    "module": "app.api.routes.system"
+  },
+  {
+    "path": "/api/v1/system/setup",
+    "methods": [
+      "POST"
+    ],
+    "name": "setup_system",
+    "module": "app.api.routes.system"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis",
+    "methods": [
+      "POST"
+    ],
+    "name": "analyze_market",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_status",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/overview",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_overview",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/competitors",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_competitors",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/seo",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_seo",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/performance",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_performance",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/trends",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_trends",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/growth-signals",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_growth",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/evidence",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_evidence",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/analysis/api/v1/analysis/{analysis_id}/predictions",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_analysis_predictions",
+    "module": "app.api.routes.analysis"
+  },
+  {
+    "path": "/api/v1/reviews/{company_id}",
+    "methods": [
+      "GET"
+    ],
+    "name": "get_reviews",
+    "module": "app.api.routes.reviews"
+  },
+  {
+    "path": "/api/v1/reviews/import/{company_id}",
+    "methods": [
+      "POST"
+    ],
+    "name": "import_reviews",
+    "module": "app.api.routes.reviews"
+  }
+]

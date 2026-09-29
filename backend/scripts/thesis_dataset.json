@@ -1,0 +1,109 @@
+{
+  "companies": [
+    {
+      "name": "Salesforce",
+      "domain": "salesforce.com",
+      "industry": "Enterprise SaaS",
+      "country": "US",
+      "ticker": "CRM",
+      "sec_cik": "0001108524",
+      "description": "Cloud-based CRM and enterprise software platform"
+    },
+    {
+      "name": "HubSpot",
+      "domain": "hubspot.com",
+      "industry": "Marketing SaaS",
+      "country": "US",
+      "ticker": "HUBS",
+      "sec_cik": "0001404655",
+      "description": "Inbound marketing, sales, and CRM platform"
+    },
+    {
+      "name": "ServiceNow",
+      "domain": "servicenow.com",
+      "industry": "IT Service Management",
+      "country": "US",
+      "ticker": "NOW",
+      "sec_cik": "0001373715",
+      "description": "Digital workflow and IT service management platform"
+    },
+    {
+      "name": "Atlassian",
+      "domain": "atlassian.com",
+      "industry": "Collaboration SaaS",
+      "country": "AU",
+      "ticker": "TEAM",
+      "sec_cik": "0001650372",
+      "description": "Team collaboration and project management tools (Jira, Confluence)"
+    },
+    {
+      "name": "Datadog",
+      "domain": "datadoghq.com",
+      "industry": "Observability SaaS",
+      "country": "US",
+      "ticker": "DDOG",
+      "sec_cik": "0001561550",
+      "description": "Cloud monitoring and analytics platform"
+    },
+    {
+      "name": "Snowflake",
+      "domain": "snowflake.com",
+      "industry": "Data Cloud",
+      "country": "US",
+      "ticker": "SNOW",
+      "sec_cik": "0001640147",
+      "description": "Cloud-based data warehousing and analytics"
+    },
+    {
+      "name": "CrowdStrike",
+      "domain": "crowdstrike.com",
+      "industry": "Cybersecurity SaaS",
+      "country": "US",
+      "ticker": "CRWD",
+      "sec_cik": "0001535527",
+      "description": "Cloud-native endpoint security platform"
+    }
+  ],
+  "competitor_pairs": [
+    [
+      "Salesforce",
+      "HubSpot"
+    ],
+    [
+      "Salesforce",
+      "ServiceNow"
+    ],
+    [
+      "HubSpot",
+      "Salesforce"
+    ],
+    [
+      "Atlassian",
+      "ServiceNow"
+    ],
+    [
+      "Datadog",
+      "CrowdStrike"
+    ],
+    [
+      "Snowflake",
+      "Datadog"
+    ]
+  ],
+  "sources": [
+    {
+      "name": "GDELT News",
+      "source_type": "gdelt",
+      "base_url": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "rate_limit_per_minute": 10,
+      "crawl_delay_seconds": 5.0
+    },
+    {
+      "name": "SEC EDGAR",
+      "source_type": "sec",
+      "base_url": "https://efts.sec.gov/LATEST/search-index",
+      "rate_limit_per_minute": 10,
+      "crawl_delay_seconds": 1.0
+    }
+  ]
+}

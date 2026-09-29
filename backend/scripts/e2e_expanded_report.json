@@ -1,0 +1,458 @@
+{
+  "stage1_seed": {
+    "companies": {
+      "Salesforce": 25,
+      "HubSpot": 26,
+      "ServiceNow": 27,
+      "Atlassian": 28,
+      "Datadog": 29,
+      "Snowflake": 30,
+      "CrowdStrike": 31
+    },
+    "competitors": [],
+    "sources": [
+      {
+        "name": "Company Website",
+        "id": 1
+      },
+      {
+        "name": "Company RSS",
+        "id": 2
+      },
+      {
+        "name": "SEC EDGAR",
+        "id": 3
+      }
+    ]
+  },
+  "stage2_ingestion": {
+    "per_company": {
+      "Salesforce": {
+        "documents_found": 36,
+        "documents_new": 0,
+        "documents_changed": 0,
+        "documents_skipped": 36,
+        "requests_made": 0,
+        "errors": 0,
+        "source_results": {
+          "website": {
+            "found": 20,
+            "new": 0,
+            "changed": 0,
+            "skipped": 20,
+            "requests": 20,
+            "errors": 0
+          },
+          "rss": {
+            "found": 10,
+            "new": 0,
+            "changed": 0,
+            "skipped": 10,
+            "requests": 10,
+            "errors": 0
+          },
+          "sec": {
+            "found": 1,
+            "new": 0,
+            "changed": 0,
+            "skipped": 1,
+            "requests": 1,
+            "errors": 0
+          }
+        }
+      },
+      "HubSpot": {
+        "documents_found": 34,
+        "documents_new": 0,
+        "documents_changed": 0,
+        "documents_skipped": 34,
+        "requests_made": 0,
+        "errors": 0,
+        "source_results": {
+          "website": {
+            "found": 19,
+            "new": 0,
+            "changed": 0,
+            "skipped": 19,
+            "requests": 19,
+            "errors": 0
+          },
+          "rss": {
+            "found": 10,
+            "new": 0,
+            "changed": 0,
+            "skipped": 10,
+            "requests": 10,
+            "errors": 0
+          },
+          "sec": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          }
+        }
+      },
+      "ServiceNow": {
+        "documents_found": 0,
+        "documents_new": 0,
+        "documents_changed": 0,
+        "documents_skipped": 0,
+        "requests_made": 0,
+        "errors": 3,
+        "source_results": {
+          "sec": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          }
+        }
+      },
+      "Atlassian": {
+        "documents_found": 19,
+        "documents_new": 2,
+        "documents_changed": 1,
+        "documents_skipped": 16,
+        "requests_made": 0,
+        "errors": 0,
+        "source_results": {
+          "website": {
+            "found": 15,
+            "new": 2,
+            "changed": 1,
+            "skipped": 12,
+            "requests": 15,
+            "errors": 0
+          },
+          "rss": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          },
+          "sec": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          }
+        }
+      },
+      "Datadog": {
+        "documents_found": 35,
+        "documents_new": 0,
+        "documents_changed": 0,
+        "documents_skipped": 35,
+        "requests_made": 0,
+        "errors": 0,
+        "source_results": {
+          "website": {
+            "found": 20,
+            "new": 0,
+            "changed": 0,
+            "skipped": 20,
+            "requests": 20,
+            "errors": 0
+          },
+          "rss": {
+            "found": 10,
+            "new": 0,
+            "changed": 0,
+            "skipped": 10,
+            "requests": 10,
+            "errors": 0
+          },
+          "sec": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          }
+        }
+      },
+      "Snowflake": {
+        "documents_found": 31,
+        "documents_new": 0,
+        "documents_changed": 0,
+        "documents_skipped": 31,
+        "requests_made": 0,
+        "errors": 0,
+        "source_results": {
+          "website": {
+            "found": 16,
+            "new": 0,
+            "changed": 0,
+            "skipped": 16,
+            "requests": 16,
+            "errors": 0
+          },
+          "rss": {
+            "found": 10,
+            "new": 0,
+            "changed": 0,
+            "skipped": 10,
+            "requests": 10,
+            "errors": 0
+          },
+          "sec": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          }
+        }
+      },
+      "CrowdStrike": {
+        "documents_found": 5,
+        "documents_new": 1,
+        "documents_changed": 1,
+        "documents_skipped": 3,
+        "requests_made": 0,
+        "errors": 0,
+        "source_results": {
+          "website": {
+            "found": 4,
+            "new": 0,
+            "changed": 1,
+            "skipped": 3,
+            "requests": 4,
+            "errors": 0
+          },
+          "rss": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          },
+          "sec": {
+            "found": 0,
+            "new": 0,
+            "changed": 0,
+            "skipped": 0,
+            "requests": 0,
+            "errors": 0
+          }
+        }
+      }
+    },
+    "total_new": 3,
+    "total_found": 160,
+    "total_skipped": 155,
+    "errors": 3
+  },
+  "stage3_nlp": {
+    "sentiment": 3,
+    "entities": 46,
+    "embeddings": 3,
+    "processed_docs": 5,
+    "topics": 10
+  },
+  "stage4_embeddings": {
+    "column_type": "vector",
+    "count": 203,
+    "dimension_check": 384
+  },
+  "stage5_intelligence": {
+    "mai_results": {
+      "Salesforce": {
+        "company_id": 25,
+        "metric_date": "2026-09-18",
+        "index_value": 52.23,
+        "components": {
+          "news_volume": 1.0,
+          "sentiment": 0.605,
+          "topic_momentum": 0.1667,
+          "review_mention_activity": 1.0,
+          "content_activity": 0.2267
+        },
+        "weights": {
+          "content_activity": 0.3,
+          "review_mention_activity": 0.3,
+          "topic_momentum": 0.2,
+          "sentiment": 0.2
+        }
+      },
+      "HubSpot": {
+        "company_id": 26,
+        "metric_date": "2026-09-18",
+        "index_value": 59.27,
+        "components": {
+          "news_volume": 0.9667,
+          "sentiment": 0.5808,
+          "topic_momentum": 0.0,
+          "review_mention_activity": 1.0,
+          "content_activity": 0.1933
+        },
+        "weights": {
+          "content_activity": 0.3,
+          "review_mention_activity": 0.3,
+          "topic_momentum": 0.2,
+          "sentiment": 0.2
+        }
+      },
+      "ServiceNow": {
+        "company_id": 27,
+        "metric_date": "2026-09-18",
+        "index_value": null,
+        "components": {
+          "news_volume": 0.0,
+          "sentiment": 0.75,
+          "topic_momentum": 0.0,
+          "review_mention_activity": 0.0,
+          "content_activity": 0.0
+        },
+        "weights": {
+          "content_activity": 0.3,
+          "review_mention_activity": 0.3,
+          "topic_momentum": 0.2,
+          "sentiment": 0.2
+        }
+      },
+      "Atlassian": {
+        "company_id": 28,
+        "metric_date": "2026-09-18",
+        "index_value": 40.17,
+        "components": {
+          "news_volume": 0.5,
+          "sentiment": 0.6086,
+          "topic_momentum": 0.5,
+          "review_mention_activity": 0.5,
+          "content_activity": 0.1
+        },
+        "weights": {
+          "content_activity": 0.3,
+          "review_mention_activity": 0.3,
+          "topic_momentum": 0.2,
+          "sentiment": 0.2
+        }
+      },
+      "Datadog": {
+        "company_id": 29,
+        "metric_date": "2026-09-18",
+        "index_value": 57.03,
+        "components": {
+          "news_volume": 0.9,
+          "sentiment": 0.511,
+          "topic_momentum": 0.0,
+          "review_mention_activity": 1.0,
+          "content_activity": 0.18
+        },
+        "weights": {
+          "content_activity": 0.3,
+          "review_mention_activity": 0.3,
+          "topic_momentum": 0.2,
+          "sentiment": 0.2
+        }
+      },
+      "Snowflake": {
+        "company_id": 30,
+        "metric_date": "2026-09-18",
+        "index_value": 57.91,
+        "components": {
+          "news_volume": 0.8333,
+          "sentiment": 0.5663,
+          "topic_momentum": 0.0,
+          "review_mention_activity": 1.0,
+          "content_activity": 0.1667
+        },
+        "weights": {
+          "content_activity": 0.3,
+          "review_mention_activity": 0.3,
+          "topic_momentum": 0.2,
+          "sentiment": 0.2
+        }
+      },
+      "CrowdStrike": {
+        "company_id": 31,
+        "metric_date": "2026-09-18",
+        "index_value": 24.33,
+        "components": {
+          "news_volume": 0.1667,
+          "sentiment": 0.75,
+          "topic_momentum": 0.1667,
+          "review_mention_activity": 0.1667,
+          "content_activity": 0.0333
+        },
+        "weights": {
+          "content_activity": 0.3,
+          "review_mention_activity": 0.3,
+          "topic_momentum": 0.2,
+          "sentiment": 0.2
+        }
+      }
+    },
+    "metrics_stored": 136
+  },
+  "stage6_idempotency": {
+    "idempotent": true,
+    "docs_before": 203,
+    "docs_after": 206,
+    "new_on_rerun": 0
+  },
+  "stage7_prediction": {
+    "has_sufficient_data": false,
+    "metric_counts": {
+      "Salesforce": 1,
+      "HubSpot": 1,
+      "ServiceNow": 1,
+      "Atlassian": 1,
+      "Datadog": 1,
+      "Snowflake": 1,
+      "CrowdStrike": 1
+    }
+  },
+  "stage8_summary": {
+    "companies": 31,
+    "documents": 206,
+    "sentiment_results": 243,
+    "entities": 5411,
+    "embeddings": 206,
+    "market_metrics": 155,
+    "source_states": 165,
+    "ingestion_runs": 115,
+    "date_range": "2026-08-28 08:00:03+00:00 to 2026-09-17 17:51:58+00:00",
+    "documents_by_company": {
+      "Salesforce": 34,
+      "HubSpot": 29,
+      "Datadog": 27,
+      "Snowflake": 25,
+      "Breef": 21,
+      "Semrush": 17,
+      "Moz": 15,
+      "Atlassian": 15,
+      "Curato": 10,
+      "Ahrefs": 8,
+      "CrowdStrike": 5
+    },
+    "sentiment_distribution": {
+      "negative": 1,
+      "positive": 43,
+      "neutral": 199
+    },
+    "entity_types": {
+      "ORG": 3033,
+      "PERSON": 1437,
+      "GPE": 426,
+      "PRODUCT": 365,
+      "NORP": 86,
+      "LOC": 47,
+      "EVENT": 17
+    }
+  },
+  "elapsed_seconds": 1128.7
+}

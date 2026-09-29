@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 48 23% 96%; /* #F7F6F2 */
+    --foreground: 223 66% 13%; /* #0B1736 */
+
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 223 66% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 223 66% 13%;
+
+    --primary: 223 66% 13%; /* #0B1736 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 48 23% 92%; /* Slightly darker than background for secondary */
+    --secondary-foreground: 223 66% 13%;
+
+    --muted: 220 13% 91%; /* #E5E7EB */
+    --muted-foreground: 221 13% 46%; /* #667085 */
+
+    --accent: 175 84% 32%; /* Teal Accent */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 91%; /* #E5E7EB */
+    --input: 220 13% 91%;
+    --ring: 223 66% 13%;
+
+    --radius: 0.3rem; /* Restrained rounded corners */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom restrained styles for the UI to prevent "AI magical" look */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-serif font-medium tracking-tight text-primary;
+}
+
+body {
+  @apply font-sans;
+}
