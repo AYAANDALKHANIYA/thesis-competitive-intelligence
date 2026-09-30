@@ -29,6 +29,21 @@ async def lifespan(app: FastAPI):
         version=settings.APP_VERSION,
     )
 
+    # ---------------------------------------------------------
+    # Auto-fix missing schema columns safely (bypass Alembic)
+    # ---------------------------------------------------------
+    try:
+        from app.db.session import engine
+        from sqlalchemy import text
+        async with engine.begin() as conn:
+            await conn.execute(text("ALTER TABLE sentiment_results ADD COLUMN IF NOT EXISTS analysis_id INTEGER;"))
+            await conn.execute(text("ALTER TABLE insights ADD COLUMN IF NOT EXISTS analysis_id INTEGER;"))
+            await conn.execute(text("ALTER TABLE market_metrics ADD COLUMN IF NOT EXISTS analysis_id INTEGER;"))
+        logger.info("schema_verified", message="Ensured analysis_id columns exist.")
+    except Exception as e:
+        logger.warning("schema_verification_failed", error=str(e))
+    # ---------------------------------------------------------
+
     # Start scheduler in production
     if settings.is_production:
         from app.services.ingestion.scheduler import setup_scheduler, start_scheduler
