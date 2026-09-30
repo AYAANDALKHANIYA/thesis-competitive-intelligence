@@ -48,15 +48,17 @@ class GDELTExtractor(BaseExtractor):
         url = f"{GDELT_DOC_API}?{'&'.join(f'{k}={quote(str(v))}' for k, v in params.items())}"
 
         response = await self.fetch_url(url, source_key, rate_limit)
+        
+        # If GDELT is rate-limited (common on Railway IPs), we fallback to DuckDuckGo News
         if not response or response.status_code != 200:
-            logger.warning("gdelt_fetch_failed", company=company_name)
-            raise Exception("GDELT fetch failed")
+            logger.warning("gdelt_fetch_failed_using_fallback", company=company_name)
+            return await self._fallback_ddg(query, max_records)
 
         try:
             data = response.json()
         except Exception:
-            logger.warning("gdelt_json_parse_error", company=company_name)
-            raise Exception("GDELT json parse error")
+            logger.warning("gdelt_json_parse_error_using_fallback", company=company_name)
+            return await self._fallback_ddg(query, max_records)
 
         articles = data.get("articles", [])
         results: List[ExtractionResult] = []
@@ -115,4 +117,58 @@ class GDELTExtractor(BaseExtractor):
             company=company_name,
             articles=len(results),
         )
+        return results
+
+    async def _fallback_ddg(self, query: str, max_records: int) -> List[ExtractionResult]:
+        """Fallback to DuckDuckGo News when GDELT is rate limited or blocked."""
+        import asyncio
+        results: List[ExtractionResult] = []
+        try:
+            from duckduckgo_search import DDGS
+            # DDGS is synchronous, so we run it in a thread
+            def fetch_ddg():
+                return list(DDGS().news(query, max_results=max_records))
+            
+            loop = asyncio.get_running_loop()
+            news_items = await loop.run_in_executor(None, fetch_ddg)
+            
+            for item in news_items:
+                url = item.get("url", "")
+                if not url:
+                    continue
+                
+                title = item.get("title", "")
+                content = item.get("body", "")
+                source = item.get("source", "")
+                date_str = item.get("date", "")
+                
+                published_at = None
+                if date_str:
+                    try:
+                        # e.g., "2026-09-30T07:00:00+00:00"
+                        published_at = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+                    except ValueError:
+                        pass
+                
+                results.append(
+                    ExtractionResult(
+                        url=normalise_url(url),
+                        title=title,
+                        content=content,
+                        published_at=published_at,
+                        language="English",
+                        document_type="news_article",
+                        source_type="ddg_news",
+                        metadata={
+                            "ddg_source": source,
+                            "ddg_image": item.get("image", "")
+                        }
+                    )
+                )
+            logger.info("ddg_fallback_extraction_complete", query=query, articles=len(results))
+        except ImportError:
+            logger.error("duckduckgo_search not installed, cannot use fallback")
+        except Exception as e:
+            logger.error(f"DDG fallback failed: {e}")
+            
         return results
