@@ -2,6 +2,7 @@
 BASH_ENV = "/app/nixpacks_env.sh"
 ENV = "/app/nixpacks_env.sh"
 HOME = "/app"
+PATH = "/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 [phases.generate_env]
 dependsOn = ["install"]
