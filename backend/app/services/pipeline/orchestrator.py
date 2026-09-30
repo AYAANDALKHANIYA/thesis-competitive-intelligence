@@ -609,8 +609,56 @@ async def run_analysis_pipeline(analysis_id: int):
                     
                 analysis.completed_at = datetime.now(timezone.utc)
                 
+                logger.info("analysis_flush_started")
+                try:
+                    await session.flush()
+                except Exception as flush_exc:
+                    logger.exception("analysis_flush_failed")
+                    logger.error(
+                        "flush_failed_details",
+                        exc_class=type(flush_exc).__name__,
+                        exc_repr=repr(flush_exc),
+                        exc_str=str(flush_exc),
+                        cause_class=type(flush_exc.__cause__).__name__ if flush_exc.__cause__ else None,
+                        cause_repr=repr(flush_exc.__cause__),
+                        context_class=type(flush_exc.__context__).__name__ if flush_exc.__context__ else None,
+                        context_repr=repr(flush_exc.__context__)
+                    )
+                    
+                    if hasattr(flush_exc, "orig") or "DBAPIError" in type(flush_exc).__name__:
+                        orig = getattr(flush_exc, "orig", None)
+                        logger.error(
+                            "flush_failed_dbapi_details",
+                            orig_type=type(orig).__name__ if orig else None,
+                            orig_repr=repr(orig),
+                            orig_str=str(orig),
+                            sqlstate=getattr(orig, "sqlstate", None),
+                            pgcode=getattr(orig, "pgcode", None),
+                            detail=getattr(orig, "detail", None),
+                            constraint_name=getattr(orig, "constraint_name", None),
+                            table_name=getattr(orig, "table_name", None),
+                            column_name=getattr(orig, "column_name", None),
+                            statement=getattr(flush_exc, "statement", None)
+                        )
+                        
+                    try:
+                        await session.rollback()
+                    except Exception:
+                        logger.exception("rollback_after_flush_failure_failed")
+                        
+                    raise flush_exc
+
                 logger.info("analysis_commit_started")
-                await session.commit()
+                try:
+                    await session.commit()
+                except Exception as commit_exc:
+                    logger.exception("analysis_commit_failed")
+                    try:
+                        await session.rollback()
+                    except Exception:
+                        logger.exception("rollback_after_commit_failure_failed")
+                    raise commit_exc
+                    
                 logger.info("analysis_commit_completed", elapsed_seconds=round(time.time() - start_time, 2))
                 
             logger.info(f"AnalysisRun {analysis_id} completed successfully with status {analysis.status if analysis else 'UNKNOWN'}.")
@@ -620,18 +668,31 @@ async def run_analysis_pipeline(analysis_id: int):
     except Exception as e:
         logger.exception(f"AnalysisRun {analysis_id} failed fatally.")
         
+        safe_error = str(e)[:2000].replace("\x00", "")
+        
         # Robust error handler (Fresh session)
-        logger.info("db_session_opened")
+        logger.info("db_session_opened (error handler)")
         try:
             async with async_session_factory() as session:
                 res = await session.execute(select(AnalysisRun).where(AnalysisRun.id == analysis_id))
+                logger.info("AnalysisRun SELECT succeeded")
                 analysis = res.scalars().first()
                 if analysis:
                     analysis.status = "FAILED"
-                    analysis.error_summary = str(e)
+                    logger.info("status assignment succeeded")
+                    analysis.error_summary = safe_error
+                    logger.info("error_summary assignment succeeded")
                     analysis.completed_at = datetime.now(timezone.utc)
-                    await session.commit()
+                    try:
+                        await session.commit()
+                        logger.info("failure-state commit succeeded")
+                    except Exception as failure_commit_exc:
+                        logger.exception("analysis_failure_state_commit_failed")
+                        try:
+                            await session.rollback()
+                        except Exception:
+                            pass
         except Exception as secondary_e:
             logger.error(f"Secondary failure saving error state for AnalysisRun {analysis_id}: {secondary_e}")
         finally:
-            logger.info("db_session_closed")
+            logger.info("db_session_closed (error handler)")
