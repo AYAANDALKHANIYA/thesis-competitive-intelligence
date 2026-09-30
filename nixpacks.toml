@@ -1,3 +1,10 @@
 [phases.setup]
-nixPkgs = ["...", "stdenv.cc.cc.lib"]
-cmds = ["...", "cp -f $(find /nix/store -path '*/lib/libstdc++.so.6' | grep gcc | head -n 1) /usr/lib/libstdc++.so.6"]
+nixPkgs = ["...", "stdenv.cc.cc.lib", "patchelf", "binutils"]
+
+[phases.build]
+cmds = [
+    "...",
+    "export NIX_GCC_LIB=$(find /nix/store -path '*/lib/libstdc++.so.6' | grep gcc | head -n 1 | xargs dirname)",
+    "find /opt/venv/lib -name '_greenlet*.so' -exec patchelf --set-rpath \"$NIX_GCC_LIB\" {} \\;",
+    "find /opt/venv/lib -name '_greenlet*.so' -exec readelf -d {} \\;"
+]
