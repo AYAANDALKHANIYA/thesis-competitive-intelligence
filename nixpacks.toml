@@ -1,4 +1,2 @@
-providers = ["python"]
-
 [phases.setup]
 nixPkgs = ["...", "stdenv.cc.cc.lib"]
