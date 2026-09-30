@@ -40,7 +40,14 @@ async def process_unprocessed_documents(
 
     # Batch sentiment
     try:
-        sentiment_results = sentiment_svc.analyse_batch(texts, batch_size=settings.NLP_BATCH_SIZE)
+        import asyncio
+        loop = asyncio.get_running_loop()
+        sentiment_results = await loop.run_in_executor(
+            None, 
+            sentiment_svc.analyse_batch, 
+            texts, 
+            settings.NLP_BATCH_SIZE
+        )
         for doc, result in zip(docs, sentiment_results):
             if result:
                 label_val = str(result["label"]) if result["label"] is not None else "unknown"
@@ -64,8 +71,12 @@ async def process_unprocessed_documents(
 
     # Batch entity extraction
     try:
-        for doc in docs:
-            entities = entity_svc.extract_entities(doc.content or "")
+        def extract_all(docs):
+            return [entity_svc.extract_entities(doc.content or "") for doc in docs]
+        
+        all_entities = await loop.run_in_executor(None, extract_all, docs)
+        
+        for doc, entities in zip(docs, all_entities):
             for ent in entities:
                 await analysis_repo.create_entity(
                     document_id=doc.id,
@@ -84,7 +95,12 @@ async def process_unprocessed_documents(
 
     # Batch embeddings
     try:
-        emb_results = embedding_svc.generate_batch(texts, batch_size=settings.NLP_BATCH_SIZE)
+        emb_results = await loop.run_in_executor(
+            None,
+            embedding_svc.generate_batch,
+            texts,
+            settings.NLP_BATCH_SIZE
+        )
         for doc, emb in zip(docs, emb_results):
             if emb:
                 if len(emb) != 384:
