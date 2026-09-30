@@ -7,5 +7,5 @@ PATH = "/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 [phases.generate_env]
 dependsOn = ["install"]
 cmds = [
-    "export NIX_GCC_LIB=$(find /nix/store -type f -name 'libstdc++.so.6' | head -n 1 | xargs -r dirname) && echo \"export LD_LIBRARY_PATH=$NIX_GCC_LIB:\\$LD_LIBRARY_PATH\" > /app/nixpacks_env.sh && echo \". /app/nixpacks_env.sh\" >> /app/.bashrc && echo \". /app/nixpacks_env.sh\" >> /app/.profile && chmod +x /app/nixpacks_env.sh"
+    "export NIX_GCC_LIB=$(find /nix/store -name 'libstdc++.so.6' | head -n 1 | xargs -r dirname) && echo \"export LD_LIBRARY_PATH=$NIX_GCC_LIB:\\$LD_LIBRARY_PATH\" > /app/nixpacks_env.sh && echo \". /app/nixpacks_env.sh\" >> /app/.bashrc && echo \". /app/nixpacks_env.sh\" >> /app/.profile && chmod +x /app/nixpacks_env.sh"
 ]
