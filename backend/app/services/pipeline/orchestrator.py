@@ -281,7 +281,7 @@ async def run_analysis_pipeline(session: AsyncSession, analysis_id: int):
                     await process_unprocessed_documents(session, comp.id)
                 except Exception as e:
                     logger.error(f"NLP processing failed for {comp.name}: {e}")
-                    analysis.status = "PARTIAL"
+                    raise
             
             # Calculate Activity Scores Safely based on requested methodology
             total_weight = 0.0

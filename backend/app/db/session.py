@@ -13,17 +13,32 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from app.core.config import get_settings
+from sqlalchemy import event
+import pgvector.asyncpg
 
 settings = get_settings()
 
+engine_kwargs = {
+    "echo": False,
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+}
+
+if "sqlite" not in settings.DATABASE_URL:
+    engine_kwargs["pool_size"] = 10
+    engine_kwargs["max_overflow"] = 20
+
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=False,
-    pool_size=10,
-    max_overflow=20,
-    pool_pre_ping=True,
-    pool_recycle=300,
+    **engine_kwargs
 )
+
+@event.listens_for(engine.sync_engine, "connect")
+def register_custom_types(dbapi_connection, connection_record):
+    if engine.dialect.name == "postgresql" and engine.dialect.driver == "asyncpg":
+        import pgvector.asyncpg
+        if hasattr(dbapi_connection, "run_async"):
+            dbapi_connection.run_async(lambda conn: pgvector.asyncpg.register_vector(conn))
 
 async_session_factory = async_sessionmaker(
     engine,

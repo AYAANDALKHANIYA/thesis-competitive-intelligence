@@ -53,8 +53,10 @@ async def process_unprocessed_documents(
                 )
                 stats["sentiment"] += 1
     except Exception as exc:
+        await db.rollback()
         logger.error("batch_sentiment_error", error=str(exc))
         stats["errors"] += 1
+        raise
 
     # Batch entity extraction
     try:
@@ -71,14 +73,18 @@ async def process_unprocessed_documents(
                 )
                 stats["entities"] += 1
     except Exception as exc:
+        await db.rollback()
         logger.error("batch_entity_error", error=str(exc))
         stats["errors"] += 1
+        raise
 
     # Batch embeddings
     try:
         emb_results = embedding_svc.generate_batch(texts, batch_size=settings.NLP_BATCH_SIZE)
         for doc, emb in zip(docs, emb_results):
             if emb:
+                if len(emb) != 384:
+                    raise ValueError(f"Invalid embedding dimension: expected 384, got {len(emb)}")
                 existing = await analysis_repo.has_embedding(doc.id)
                 if not existing:
                     await analysis_repo.create_embedding(
@@ -88,8 +94,10 @@ async def process_unprocessed_documents(
                     )
                     stats["embeddings"] += 1
     except Exception as exc:
+        await db.rollback()
         logger.error("batch_embedding_error", error=str(exc))
         stats["errors"] += 1
+        raise
 
     # Mark documents as processed
     for doc in docs:

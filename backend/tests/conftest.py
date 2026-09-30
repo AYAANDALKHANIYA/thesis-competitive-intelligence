@@ -2,6 +2,7 @@
 
 import asyncio
 from typing import AsyncGenerator
+from sqlalchemy.ext.asyncio import AsyncSession
 
 import pytest
 import pytest_asyncio
@@ -91,3 +92,21 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
     db_file = pathlib.Path("./test.db")
     if db_file.exists():
         db_file.unlink()
+
+@pytest_asyncio.fixture
+async def db_session() -> AsyncGenerator[AsyncSession, None]:
+    from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+    from app.db.base import Base
+
+    engine = create_async_engine("sqlite+aiosqlite:///./test.db", echo=False)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    test_session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+    async with test_session_factory() as session:
+        yield session
+
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    await engine.dispose()
