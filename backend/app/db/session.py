@@ -33,13 +33,6 @@ engine = create_async_engine(
     **engine_kwargs
 )
 
-@event.listens_for(engine.sync_engine, "connect")
-def register_custom_types(dbapi_connection, connection_record):
-    if engine.dialect.name == "postgresql" and engine.dialect.driver == "asyncpg":
-        import pgvector.asyncpg
-        if hasattr(dbapi_connection, "run_async"):
-            dbapi_connection.run_async(lambda conn: pgvector.asyncpg.register_vector(conn))
-
 async_session_factory = async_sessionmaker(
     engine,
     class_=AsyncSession,
