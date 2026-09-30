@@ -1,16 +1,13 @@
 [variables]
-BASH_ENV = "/app/.nixpacks_env"
-ENV = "/app/.nixpacks_env"
+BASH_ENV = "/app/nixpacks_env.sh"
+ENV = "/app/nixpacks_env.sh"
 HOME = "/app"
 
 [phases.setup]
 nixPkgs = ["...", "stdenv.cc.cc.lib"]
 
-[phases.build]
+[phases.install]
 cmds = [
     "...",
-    "export NIX_GCC_LIB=$(find /nix/store -path '*/lib/libstdc++.so.6' | grep gcc | head -n 1 | xargs dirname)",
-    "echo \"export LD_LIBRARY_PATH=$NIX_GCC_LIB:\\$LD_LIBRARY_PATH\" > /app/.nixpacks_env",
-    "echo \". /app/.nixpacks_env\" > /app/.bashrc",
-    "echo \". /app/.nixpacks_env\" > /app/.profile"
+    "export NIX_GCC_LIB=$(find /nix/store -path '*/lib/libstdc++.so.6' | grep gcc | head -n 1 | xargs dirname) && echo \"export LD_LIBRARY_PATH=$NIX_GCC_LIB:\\$LD_LIBRARY_PATH\" > /app/nixpacks_env.sh && echo \". /app/nixpacks_env.sh\" >> /app/.bashrc && echo \". /app/nixpacks_env.sh\" >> /app/.profile && chmod +x /app/nixpacks_env.sh"
 ]
