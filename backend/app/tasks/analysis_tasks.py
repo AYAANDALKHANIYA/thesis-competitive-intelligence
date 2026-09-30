@@ -43,13 +43,17 @@ async def process_unprocessed_documents(
         sentiment_results = sentiment_svc.analyse_batch(texts, batch_size=settings.NLP_BATCH_SIZE)
         for doc, result in zip(docs, sentiment_results):
             if result:
+                label_val = str(result["label"]) if result["label"] is not None else "unknown"
+                score_val = float(result["score"])
+                conf_val = float(result["confidence"])
+                logger.info(f"Inserting sentiment doc={doc.id} label={label_val} score={score_val}")
                 await analysis_repo.create_sentiment(
                     document_id=doc.id,
-                    label=result["label"],
-                    score=result["score"],
-                    confidence=result["confidence"],
-                    model_name=result["model_name"],
-                    model_version=result["model_version"],
+                    label=label_val,
+                    score=score_val,
+                    confidence=conf_val,
+                    model_name=str(result["model_name"]),
+                    model_version=str(result["model_version"]),
                 )
                 stats["sentiment"] += 1
     except Exception as exc:
@@ -65,11 +69,11 @@ async def process_unprocessed_documents(
             for ent in entities:
                 await analysis_repo.create_entity(
                     document_id=doc.id,
-                    entity_text=ent["entity_text"],
-                    entity_type=ent["entity_type"],
-                    start_position=ent.get("start_position"),
-                    end_position=ent.get("end_position"),
-                    confidence=ent.get("confidence"),
+                    entity_text=str(ent["entity_text"]),
+                    entity_type=str(ent["entity_type"]),
+                    start_position=int(ent["start_position"]) if ent.get("start_position") is not None else None,
+                    end_position=int(ent["end_position"]) if ent.get("end_position") is not None else None,
+                    confidence=float(ent["confidence"]) if ent.get("confidence") is not None else None,
                 )
                 stats["entities"] += 1
     except Exception as exc:
