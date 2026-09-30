@@ -1,6 +1,7 @@
 import pytest
 import pytest_asyncio
 import asyncio
+from unittest.mock import patch
 import hashlib
 from datetime import datetime, timezone
 from sqlalchemy import select
@@ -180,7 +181,7 @@ async def test_evidence_normalization_and_missing_dates(db_session, sample_compa
 
 @pytest.mark.asyncio
 async def test_malformed_llm_json(db_session, sample_company):
-    generator = InsightGenerator(db_session)
+    generator = InsightGenerator()
     parsed = generator._parse_response("Not a JSON object")
     
     assert parsed["title"] == "Market Intelligence Insight"
@@ -188,8 +189,15 @@ async def test_malformed_llm_json(db_session, sample_company):
     assert parsed["severity"] == "medium"
 
 @pytest.mark.asyncio
-async def test_llm_unavailable(db_session, sample_company, monkeypatch):
-    generator = InsightGenerator(db_session)
+@patch("app.db.session.async_session_factory")
+async def test_llm_unavailable(mock_session_factory, db_session, sample_company, monkeypatch):
+    from contextlib import asynccontextmanager
+    @asynccontextmanager
+    async def mock_factory():
+        yield db_session
+    mock_session_factory.side_effect = mock_factory
+
+    generator = InsightGenerator()
     
     async def mock_call(*args, **kwargs):
         return None

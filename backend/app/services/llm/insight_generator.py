@@ -56,11 +56,8 @@ NOTE: Limit key_findings to a maximum of 3 items to remain concise.
 class InsightGenerator:
     """Generates evidence-grounded insights using an LLM."""
 
-    def __init__(self, db: AsyncSession) -> None:
-        self.db = db
+    def __init__(self) -> None:
         self.settings = get_settings()
-        self.evidence_builder = EvidenceBuilder(db)
-        self.insight_repo = InsightRepository(db)
 
     async def generate_insight(
         self,
@@ -73,25 +70,34 @@ class InsightGenerator:
 
         Uses caching: if evidence hasn't changed and cache isn't expired, returns cached insight.
         """
-        # Build evidence
-        evidence = await self.evidence_builder.build_evidence(company_id, insight_type)
-        evidence_hash = self.evidence_builder.compute_evidence_hash(evidence)
+        from app.db.session import async_session_factory
+        from app.services.llm.evidence_builder import EvidenceBuilder
+        from app.repositories.insights import InsightRepository
+        
+        # 1. READ REQUIRED DATA (Short session)
+        async with async_session_factory() as session:
+            evidence_builder = EvidenceBuilder(session)
+            insight_repo = InsightRepository(session)
+            
+            # Build evidence
+            evidence = await evidence_builder.build_evidence(company_id, insight_type)
+            evidence_hash = evidence_builder.compute_evidence_hash(evidence)
 
-        # Check cache
-        if not force:
-            cached = await self.insight_repo.get_by_input_hash(company_id, evidence_hash)
-            if cached:
-                logger.info("insight_cache_hit_identical_evidence", company_id=company_id, type=insight_type)
-                return {
-                    "id": cached.id,
-                    "cached": True,
-                    "title": cached.title,
-                    "summary": cached.summary,
-                    "severity": cached.severity,
-                    "evidence": cached.evidence,
-                }
+            # Check cache
+            if not force:
+                cached = await insight_repo.get_by_input_hash(company_id, evidence_hash)
+                if cached:
+                    logger.info("insight_cache_hit_identical_evidence", company_id=company_id, type=insight_type)
+                    return {
+                        "id": cached.id,
+                        "cached": True,
+                        "title": cached.title,
+                        "summary": cached.summary,
+                        "severity": cached.severity,
+                        "evidence": cached.evidence,
+                    }
 
-        # Call LLM
+        # 2. LONG-RUNNING AI/LLM PROCESSING (No active DB session)
         prompt = self._build_prompt(company_name, insight_type, evidence)
         llm_response = await self._call_llm(prompt)
 
@@ -101,41 +107,43 @@ class InsightGenerator:
         # Parse structured response
         parsed = self._parse_response(llm_response)
 
-        # Store insight
-        insight = await self.insight_repo.create(
-            company_id=company_id,
-            insight_type=insight_type,
-            title=parsed.get("title", f"{insight_type.title()} Insight"),
-            summary=json.dumps(parsed.get("brief", {"summary": parsed.get("summary", llm_response)})),
-            severity=parsed.get("severity", "medium"),
-            confidence=parsed.get("confidence"),
-            model_name=self.settings.OPENAI_MODEL,
-            model_version="1.0",
-            evidence={
-                "input_evidence": evidence,
-                "key_findings": parsed.get("key_findings", []),
-            },
-            input_hash=evidence_hash,
-        )
+        # 3. WRITE RESULTS (Fresh session)
+        async with async_session_factory() as session:
+            insight_repo = InsightRepository(session)
+            insight = await insight_repo.create(
+                company_id=company_id,
+                insight_type=insight_type,
+                title=parsed.get("title", f"{insight_type.title()} Insight"),
+                summary=json.dumps(parsed.get("brief", {"summary": parsed.get("summary", llm_response)})),
+                severity=parsed.get("severity", "medium"),
+                confidence=parsed.get("confidence"),
+                model_name=self.settings.OPENAI_MODEL,
+                model_version="1.0",
+                evidence={
+                    "input_evidence": evidence,
+                    "key_findings": parsed.get("key_findings", []),
+                },
+                input_hash=evidence_hash,
+            )
 
-        logger.info(
-            "insight_generated",
-            company_id=company_id,
-            type=insight_type,
-            insight_id=insight.id,
-        )
+            logger.info(
+                "insight_generated",
+                company_id=company_id,
+                type=insight_type,
+                insight_id=insight.id,
+            )
 
-        await self.db.commit()
+            await session.commit()
 
-        return {
-            "id": insight.id,
-            "cached": False,
-            "title": parsed.get("title", ""),
-            "summary": insight.summary,
-            "severity": parsed.get("severity", "medium"),
-            "confidence": parsed.get("confidence"),
-            "evidence": insight.evidence,
-        }
+            return {
+                "id": insight.id,
+                "cached": False,
+                "title": parsed.get("title", ""),
+                "summary": insight.summary,
+                "severity": parsed.get("severity", "medium"),
+                "confidence": parsed.get("confidence"),
+                "evidence": insight.evidence,
+            }
 
     def _build_prompt(
         self, company_name: str, insight_type: str, evidence: Dict

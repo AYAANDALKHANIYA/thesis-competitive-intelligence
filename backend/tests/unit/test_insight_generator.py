@@ -19,20 +19,11 @@ async def test_groq_client_configuration():
         mock_client_instance.chat.completions.create.return_value = mock_response
 
         # Mock dependencies for InsightGenerator
-        generator = InsightGenerator(db=MagicMock())
+        generator = InsightGenerator()
         generator.settings = settings
-        generator.insight_repo = MagicMock()
-        generator.evidence_builder = MagicMock()
         
-        from unittest.mock import AsyncMock
-        # Override the evidence builder to avoid DB queries
-        generator.evidence_builder.build_evidence = AsyncMock(return_value={})
-        generator.evidence_builder.compute_evidence_hash.return_value = "hash"
-        generator.insight_repo.get_by_input_hash = AsyncMock(return_value=None)
-        generator.insight_repo.create = AsyncMock()
-
-        # Execute
-        await generator.generate_insight(1, "TestCompany", "market_overview")
+        # Execute only _call_llm to verify configuration
+        await generator._call_llm("test prompt")
 
         # Verify client initialization
         mock_openai.assert_called_once_with(

@@ -113,8 +113,7 @@ async def analyze_market(
     
     # 5. Spawn background task
     async def _background_task(run_id: int):
-        async with async_session_factory() as session:
-            await run_analysis_pipeline(session, run_id)
+        await run_analysis_pipeline(run_id)
             
     background_tasks.add_task(_background_task, analysis.id)
     
