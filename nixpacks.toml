@@ -1,10 +1,16 @@
+[variables]
+BASH_ENV = "/app/.nixpacks_env"
+ENV = "/app/.nixpacks_env"
+HOME = "/app"
+
 [phases.setup]
-nixPkgs = ["...", "stdenv.cc.cc.lib", "patchelf", "binutils"]
+nixPkgs = ["...", "stdenv.cc.cc.lib"]
 
 [phases.build]
 cmds = [
     "...",
     "export NIX_GCC_LIB=$(find /nix/store -path '*/lib/libstdc++.so.6' | grep gcc | head -n 1 | xargs dirname)",
-    "find /opt/venv/lib -name '_greenlet*.so' -exec patchelf --set-rpath \"$NIX_GCC_LIB\" {} \\;",
-    "find /opt/venv/lib -name '_greenlet*.so' -exec readelf -d {} \\;"
+    "echo \"export LD_LIBRARY_PATH=$NIX_GCC_LIB:\\$LD_LIBRARY_PATH\" > /app/.nixpacks_env",
+    "echo \". /app/.nixpacks_env\" > /app/.bashrc",
+    "echo \". /app/.nixpacks_env\" > /app/.profile"
 ]
