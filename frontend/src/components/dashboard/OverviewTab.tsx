@@ -8,6 +8,21 @@ export function OverviewTab({ overview, primaryCompanyId }: { overview: any, pri
   const aiSummary = overview.ai_intelligence || "AI Intelligence: UNAVAILABLE"
   const isAiUnavailable = aiSummary === "AI Intelligence: UNAVAILABLE"
 
+  let parsedAiSummary: any = null
+  if (!isAiUnavailable) {
+    try {
+      let rawStr = aiSummary
+      if (typeof rawStr === 'string') {
+          rawStr = rawStr.replace(/```json/gi, '').replace(/```/g, '').trim()
+          parsedAiSummary = JSON.parse(rawStr)
+      } else if (typeof rawStr === 'object') {
+          parsedAiSummary = rawStr
+      }
+    } catch (e) {
+      // Fallback to raw text
+    }
+  }
+
   const renderComponentState = (label: string, stateValue: any) => {
     let displayState = "Available"
     let textColor = "text-navy"
@@ -93,13 +108,28 @@ export function OverviewTab({ overview, primaryCompanyId }: { overview: any, pri
                         <AlertCircle className="w-8 h-8 opacity-20" />
                         <p className="font-medium tracking-wide">INTELLIGENCE UNAVAILABLE</p>
                     </div>
+                ) : parsedAiSummary && (parsedAiSummary.executive_summary || parsedAiSummary.data_limitations) ? (
+                    <div className="prose prose-slate max-w-none text-navy leading-relaxed text-sm space-y-4 w-full">
+                        {parsedAiSummary.executive_summary && (
+                            <div>
+                                <strong className="block text-slateGray uppercase tracking-wider text-[10px] font-bold mb-1">Executive Summary</strong>
+                                <p>{parsedAiSummary.executive_summary}</p>
+                            </div>
+                        )}
+                        {parsedAiSummary.data_limitations && (
+                            <div>
+                                <strong className="block text-slateGray uppercase tracking-wider text-[10px] font-bold mb-1 mt-4">Data Limitations</strong>
+                                <p className="text-slate-500 italic">{parsedAiSummary.data_limitations}</p>
+                            </div>
+                        )}
+                    </div>
                 ) : (
-                    <div className="prose prose-slate max-w-none text-navy leading-relaxed text-sm">
-                        {aiSummary.split('\n').map((paragraph: string, idx: number) => (
+                    <div className="prose prose-slate max-w-none text-navy leading-relaxed text-sm w-full">
+                        {typeof aiSummary === 'string' ? aiSummary.split('\n').map((paragraph: string, idx: number) => (
                             <p key={idx} className={paragraph.trim() ? "mb-3 last:mb-0" : ""}>
                                 {paragraph}
                             </p>
-                        ))}
+                        )) : JSON.stringify(aiSummary)}
                     </div>
                 )}
             </CardContent>

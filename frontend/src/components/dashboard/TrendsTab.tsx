@@ -37,7 +37,12 @@ export function TrendsTab({ trends }: { trends: any }) {
                         Topic Momentum
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {trends.topic_momentum.map((topic: any) => (
+                        {trends.topic_momentum.map((topic: any) => {
+                            const isNew = topic.historical_count === 0;
+                            const displayMomentum = isNew ? "New" : topic.momentum;
+                            const displayGrowth = isNew ? "-" : `${topic.growth_rate > 1 ? '+' : ''}${((topic.growth_rate - 1) * 100).toFixed(0)}%`;
+                            
+                            return (
                             <Card key={topic.topic_id} className="border border-lightBorder shadow-sm hover:shadow-md transition-shadow">
                                 <CardContent className="p-6">
                                     <div className="flex justify-between items-start mb-4">
@@ -45,14 +50,16 @@ export function TrendsTab({ trends }: { trends: any }) {
                                             {topic.topic_name}
                                         </h4>
                                         <div className={`px-2 py-1 rounded text-xs font-medium flex items-center gap-1 shrink-0 ${
+                                            isNew ? 'bg-indigo-50 text-indigo-700' :
                                             topic.momentum === 'accelerating' ? 'bg-emerald-50 text-emerald-700' :
                                             topic.momentum === 'decelerating' ? 'bg-rose-50 text-rose-700' :
                                             'bg-slate-100 text-slate-700'
                                         }`}>
-                                            {topic.momentum === 'accelerating' && <TrendingUp className="w-3 h-3" />}
-                                            {topic.momentum === 'decelerating' && <TrendingDown className="w-3 h-3" />}
-                                            {topic.momentum === 'stable' && <Minus className="w-3 h-3" />}
-                                            <span className="capitalize">{topic.momentum}</span>
+                                            {!isNew && topic.momentum === 'accelerating' && <TrendingUp className="w-3 h-3" />}
+                                            {!isNew && topic.momentum === 'decelerating' && <TrendingDown className="w-3 h-3" />}
+                                            {!isNew && topic.momentum === 'stable' && <Minus className="w-3 h-3" />}
+                                            {isNew && <Activity className="w-3 h-3" />}
+                                            <span className="capitalize">{displayMomentum}</span>
                                         </div>
                                     </div>
                                     <div className="flex gap-6">
@@ -66,19 +73,19 @@ export function TrendsTab({ trends }: { trends: any }) {
                                         </div>
                                         <div>
                                             <p className="text-xs text-slateGray mb-1">Growth</p>
-                                            <p className={`text-xl font-medium ${topic.growth_rate > 1 ? 'text-emerald-600' : topic.growth_rate < 1 ? 'text-rose-600' : 'text-slate-500'}`}>
-                                                {topic.growth_rate > 1 ? '+' : ''}{((topic.growth_rate - 1) * 100).toFixed(0)}%
+                                            <p className={`text-xl font-medium ${isNew ? 'text-slate-400' : topic.growth_rate > 1 ? 'text-emerald-600' : topic.growth_rate < 1 ? 'text-rose-600' : 'text-slate-500'}`}>
+                                                {displayGrowth}
                                             </p>
                                         </div>
                                     </div>
                                 </CardContent>
                             </Card>
-                        ))}
+                        )})}
                     </div>
                 </div>
             )}
             
-            {((trends.activity_trend && trends.activity_trend.length > 0) || (trends.sentiment_trend && trends.sentiment_trend.length > 0)) && (
+            {((trends.activity_trend && trends.activity_trend.length > 1) || (trends.sentiment_trend && trends.sentiment_trend.length > 1)) && (
                 <div>
                      <h3 className="text-xl font-serif text-navy mb-4 flex items-center gap-2 mt-8">
                         <Activity className="w-5 h-5 text-tealAccent" />

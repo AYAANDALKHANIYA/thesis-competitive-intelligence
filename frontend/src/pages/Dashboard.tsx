@@ -233,7 +233,7 @@ export default function Dashboard() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-navy">Company Name</label>
                     <Input 
-                      placeholder="e.g. Curato" 
+                      placeholder="e.g. Notion" 
                       value={company.name}
                       onChange={(e) => setCompany({ ...company, name: e.target.value })}
                       required 
@@ -244,7 +244,7 @@ export default function Dashboard() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-navy">Primary Website</label>
                     <Input 
-                      placeholder="e.g. curato.ai" 
+                      placeholder="e.g. notion.so" 
                       value={company.website}
                       onChange={(e) => setCompany({ ...company, website: e.target.value })}
                       required 
@@ -270,7 +270,7 @@ export default function Dashboard() {
                         <div className="space-y-2">
                           <label className="text-xs font-medium text-slateGray uppercase">Competitor Name</label>
                           <Input 
-                            placeholder="e.g. Breef" 
+                            placeholder="e.g. Asana, Trello" 
                             value={comp.name}
                             onChange={(e) => handleCompetitorChange(idx, 'name', e.target.value)}
                             required 
@@ -281,7 +281,7 @@ export default function Dashboard() {
                         <div className="space-y-2">
                           <label className="text-xs font-medium text-slateGray uppercase">Website</label>
                           <Input 
-                            placeholder="e.g. breef.com" 
+                            placeholder="e.g. asana.com" 
                             value={comp.website}
                             onChange={(e) => handleCompetitorChange(idx, 'website', e.target.value)}
                             required 

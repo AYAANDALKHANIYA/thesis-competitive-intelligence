@@ -153,7 +153,7 @@ export default function Setup() {
                   <Label htmlFor="companyName">Organization Name *</Label>
                   <Input 
                     id="companyName" 
-                    placeholder="e.g. Curato" 
+                    placeholder="e.g. Notion" 
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     disabled={isSubmitting}
@@ -163,7 +163,7 @@ export default function Setup() {
                   <Label htmlFor="industry">Industry</Label>
                   <Input 
                     id="industry" 
-                    placeholder="e.g. Content Curation" 
+                    placeholder="e.g. Project management software for small teams" 
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
                     disabled={isSubmitting}
@@ -173,7 +173,7 @@ export default function Setup() {
                   <Label htmlFor="website">Primary Website *</Label>
                   <Input 
                     id="website" 
-                    placeholder="https://curato.ai" 
+                    placeholder="https://www.notion.so" 
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
                     disabled={isSubmitting}
@@ -227,7 +227,7 @@ export default function Setup() {
                     <Label htmlFor="compName">Competitor Name *</Label>
                     <Input 
                       id="compName" 
-                      placeholder="e.g. Breef" 
+                      placeholder="e.g. Asana, Trello" 
                       value={newCompetitorName}
                       onChange={(e) => setNewCompetitorName(e.target.value)}
                       disabled={isSubmitting}
@@ -237,7 +237,7 @@ export default function Setup() {
                     <Label htmlFor="compWeb">Competitor Website *</Label>
                     <Input 
                       id="compWeb" 
-                      placeholder="https://www.breef.com" 
+                      placeholder="https://www.asana.com" 
                       value={newCompetitorWebsite}
                       onChange={(e) => setNewCompetitorWebsite(e.target.value)}
                       onKeyDown={(e) => {
