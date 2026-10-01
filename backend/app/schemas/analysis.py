@@ -121,7 +121,7 @@ class MarketMetricResponse(BaseModel):
     id: int
     company_id: int
     metric_name: str
-    metric_value: float
+    metric_value: Optional[float] = None
     metric_date: date
     components: Optional[Dict[str, Any]] = None
     created_at: datetime

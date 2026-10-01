@@ -60,7 +60,7 @@ class MetricsRepository:
         company_id: int,
         metric_name: str,
         metric_date: date,
-        metric_value: float,
+        metric_value: Optional[float],
         components: Optional[dict] = None,
         metadata: Optional[dict] = None,
     ) -> MarketMetric:

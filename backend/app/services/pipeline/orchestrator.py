@@ -597,8 +597,15 @@ async def run_analysis_pipeline(analysis_id: int):
             analysis = res.scalars().first()
             if analysis:
                 for m_dict in metrics_to_add_dicts:
+                    # Validate required fields to ensure one bad metric doesn't fail the whole run
+                    if m_dict.get("metric_name") is None or m_dict.get("company_id") is None:
+                        logger.warning(f"Skipping invalid metric (missing required fields): {m_dict}")
+                        continue
                     session.add(MarketMetric(**m_dict))
                 for i_dict in insights_to_add_dicts:
+                    if i_dict.get("insight_type") is None or i_dict.get("company_id") is None:
+                        logger.warning(f"Skipping invalid insight (missing required fields): {i_dict}")
+                        continue
                     session.add(Insight(**i_dict))
                 
                 # Check status and update
@@ -613,7 +620,8 @@ async def run_analysis_pipeline(analysis_id: int):
                 try:
                     await session.flush()
                 except Exception as flush_exc:
-                    logger.exception("analysis_flush_failed")
+                    orig_exc = getattr(flush_exc, "orig", flush_exc)
+                    logger.exception("analysis_flush_failed", exc_orig_str=str(orig_exc))
                     logger.error(
                         "flush_failed_details",
                         exc_class=type(flush_exc).__name__,

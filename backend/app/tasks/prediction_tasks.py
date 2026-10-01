@@ -55,8 +55,12 @@ async def run_prediction_pipeline(
             "min_required": settings.PREDICTION_MIN_SAMPLES,
         }
 
-    dates = [m.metric_date for m in metrics]
-    values = [m.metric_value for m in metrics]
+    dates = []
+    values = []
+    for m in metrics:
+        if m.metric_value is not None:
+            dates.append(m.metric_date)
+            values.append(m.metric_value)
 
     # 2. Build features
     df = build_features(dates, values)
