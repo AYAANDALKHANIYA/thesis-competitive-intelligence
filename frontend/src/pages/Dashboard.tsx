@@ -103,7 +103,7 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    if (analysisId && (status === "COMPLETED" || status === "PARTIAL") && !overviewData) {
+    if (analysisId && (status === "COMPLETED" || status === "PARTIAL" || status === "FAILED") && !overviewData) {
         fetchAllData(analysisId)
     }
   }, [analysisId, status])
@@ -143,7 +143,7 @@ export default function Dashboard() {
     };
   }, [analysisId])
 
-  if (analysisId && (status === "COMPLETED" || status === "PARTIAL")) {
+  if (analysisId && (status === "COMPLETED" || status === "PARTIAL" || status === "FAILED")) {
     const tabs = [
         { id: 'overview', label: 'Overview', icon: LayoutDashboard },
         { id: 'competitors', label: 'Competitors', icon: Users },
@@ -160,7 +160,7 @@ export default function Dashboard() {
             <div>
                 <h1 className="text-2xl font-serif text-white tracking-tight">Market Intelligence</h1>
                 <p className="text-slate-300 text-sm mt-1">
-                    Analysis ID: {analysisId} <span className="mx-2">•</span> Status: <span className={status === "PARTIAL" ? "text-amber-400 font-semibold" : "text-tealAccent-light font-semibold"}>{status}</span>
+                    Analysis ID: {analysisId} <span className="mx-2">•</span> Status: <span className={status === "PARTIAL" ? "text-amber-400 font-semibold" : status === "FAILED" ? "text-red-500 font-semibold" : "text-tealAccent-light font-semibold"}>{status}</span>
                 </p>
             </div>
             <Button variant="outline" className="text-navy bg-white hover:bg-slate-100 border-transparent" onClick={() => { setAnalysisId(null); setIsAnalyzing(false); setStatus(null); }}>New Analysis</Button>
@@ -189,6 +189,12 @@ export default function Dashboard() {
                 </nav>
             </aside>
             <main className="flex-1 pb-12">
+                {status === 'FAILED' && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-800">
+                    <h3 className="text-lg font-semibold mb-1">Analysis Failed</h3>
+                    <p className="text-sm">The pipeline encountered a fatal error. Some partial results might be visible below.</p>
+                  </div>
+                )}
                 {activeTab === 'overview' && <OverviewTab overview={overviewData} primaryCompanyId={overviewData?.companies[0]?.id} />}
                 {activeTab === 'competitors' && <CompetitorsTab data={competitorsData} />}
                 {activeTab === 'seo' && <SeoPerformanceTab seo={seoData} performance={performanceData} companies={overviewData?.companies} />}
